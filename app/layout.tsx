@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Toaster } from '@/components/ui/sonner';
 
 export const metadata: Metadata = {
-  title: 'Web App',
+  title: 'Smart-Grocery-Box app',
   description: 'Dashboard, produits, panier, transactions, kiosk'
 };
 
@@ -26,8 +26,8 @@ export default function RootLayout({
       <body className="min-h-screen bg-slate-50 text-slate-900">
         <div className="border-b border-slate-200 bg-white">
           <div className="container-page flex flex-wrap items-center justify-between gap-4 py-4">
-            <div className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-700">
-              Web App
+            <div className="text-sm font-semibold tracking-[0.2em] text-brand-700">
+              Smart-Grocery-Box app
             </div>
             <nav className="flex flex-wrap gap-2 text-sm">
               {navItems.map((item) => (
