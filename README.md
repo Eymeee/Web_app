@@ -56,3 +56,9 @@ curl -X POST http://localhost:3000/api/detections \
   -d '{"label":"SNACK-001","quantity":2}'
 ```
 Retour: contenu du panier et total. Si le label ne correspond ni au nom ni au SKU, la réponse est `400` avec `Produit inconnu: ...`.
+
+## Avant de pousser sur GitHub
+- Ne pas versionner `prisma/dev.db` (déjà dans `.gitignore`).
+- Commits attendus : code source, migrations Prisma, package-lock.json.
+- Vérifier localement : `npm run lint && npm run test`.
+- Si besoin de secrets/env, créer un fichier `.env.local` (non versionné).
