@@ -12,11 +12,23 @@ async function main() {
   ];
 
   for (const product of products) {
-    await prisma.product.upsert({
-      where: { sku: product.sku },
-      update: { name: product.name, price: product.price },
-      create: product
+    const existing = await prisma.product.findFirst({
+      where: {
+        OR: [
+          { sku: product.sku ?? undefined },
+          { name: product.name }
+        ]
+      }
     });
+
+    if (existing) {
+      await prisma.product.update({
+        where: { id: existing.id },
+        data: { name: product.name, price: product.price, sku: product.sku }
+      });
+    } else {
+      await prisma.product.create({ data: product });
+    }
   }
 }
 
