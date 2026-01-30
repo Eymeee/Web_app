@@ -33,7 +33,7 @@ export async function POST() {
             create: itemsData
           }
         },
-        include: { items: true }
+        include: { items: { include: { product: true } } }
       }),
       prisma.cartItem.deleteMany()
     ]);

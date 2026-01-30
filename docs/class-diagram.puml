@@ -1,0 +1,34 @@
+@startuml
+class Product {
+  id: String
+  name: String
+  price: Float
+  sku: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+class CartItem {
+  id: String
+  quantity: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+class Transaction {
+  id: String
+  total: Float
+  createdAt: DateTime
+}
+
+class TransactionItem {
+  id: String
+  quantity: Int
+  unitPrice: Float
+  lineTotal: Float
+}
+
+Product "1" -- "*" CartItem : product
+Product "1" -- "*" TransactionItem : product
+Transaction "1" -- "*" TransactionItem : items
+@enduml

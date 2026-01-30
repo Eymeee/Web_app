@@ -1,0 +1,16 @@
+@startuml
+actor User
+participant "UI" as UI
+participant "API /api/checkout" as API
+database "DB (Prisma/SQLite)" as DB
+
+User -> UI: Click "Valider transaction"
+UI -> API: POST /api/checkout
+API -> DB: SELECT cart items + products
+DB --> API: items
+API -> API: calcul lineTotal + total
+API -> DB: INSERT Transaction + TransactionItems
+API -> DB: DELETE FROM CartItem
+API --> UI: 201 { transaction }
+UI --> User: Affiche confirmation
+@enduml
