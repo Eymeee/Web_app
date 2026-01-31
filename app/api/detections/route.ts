@@ -42,8 +42,8 @@ export async function POST(request: Request) {
     const product = await prisma.product.findFirst({
       where: {
         OR: [
-          { name: { equals: label, mode: 'insensitive' } },
-          { sku: { equals: label, mode: 'insensitive' } }
+          { name: { equals: label } },
+          { sku: { equals: label } }
         ]
       }
     });

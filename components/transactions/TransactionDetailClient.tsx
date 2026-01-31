@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/table';
 import { PageHeader } from '@/components/ui/page-header';
 import { CardSkeleton } from '@/components/ui/loading-skeleton';
+import { ProductThumb } from '@/components/product-thumb';
 import type { ApiError } from '@/lib/errors';
 
 export type TransactionItem = {
@@ -141,14 +142,22 @@ export function TransactionDetailClient() {
                   ) : (
                     transaction.items.map((item) => (
                       <TableRow key={item.id}>
-                        <TableCell className="font-medium">
-                          <div>
-                            {item.product?.name ?? 'Unknown Product'}
-                            {item.product?.sku && (
-                              <p className="text-xs text-slate-500">
-                                SKU: {item.product.sku}
-                              </p>
-                            )}
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <ProductThumb
+                              name={item.product?.name ?? 'Unknown'}
+                              size="sm"
+                            />
+                            <div>
+                              <div className="font-medium">
+                                {item.product?.name ?? 'Unknown Product'}
+                              </div>
+                              {item.product?.sku && (
+                                <p className="text-xs text-slate-500">
+                                  SKU: {item.product.sku}
+                                </p>
+                              )}
+                            </div>
                           </div>
                         </TableCell>
                         <TableCell className="hidden sm:table-cell">

@@ -15,9 +15,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className="min-h-screen bg-slate-50 text-slate-900 antialiased">
-        <Navbar />
-        <main className="container-page py-8">{children}</main>
+      <body className="relative min-h-screen bg-slate-50 text-slate-900 antialiased">
+        {/* Subtle background pattern - low opacity */}
+        <div
+          className="pointer-events-none fixed inset-0"
+          style={{
+            backgroundImage: 'url(/illustrations/bg-pattern.svg)',
+            backgroundRepeat: 'repeat'
+          }}
+          aria-hidden
+        />
+        <div className="relative">
+          <Navbar />
+          <main className="container-page py-8">{children}</main>
+        </div>
         <Toaster />
       </body>
     </html>

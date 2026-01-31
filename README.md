@@ -224,16 +224,29 @@ curl -X POST http://localhost:3000/api/detections \
 - `npm run db:migrate` — Run database migrations
 - `npm run db:seed` — Seed database with sample data
 
-## Screenshots
+## UI Visuals
+
+The app uses a cohesive visual system for a polished, product-ready look:
+
+- **Illustrations**: SVG assets in `/public/illustrations/` (hero, empty states, feature icons, kiosk)
+- **Background**: Subtle dot pattern in the app shell (low opacity)
+- **Empty states**: Friendly illustrations with clear CTAs on Products, Cart, Transactions, and 404
+- **Product thumbnails**: Deterministic gradient avatars with initials (computed from product name, no DB storage)
+- **Feature cards**: Illustration icons on the Dashboard
+
+### Screenshots
+
+### Dashboard
+*[Screenshot placeholder: Dashboard with hero banner, stats, and feature cards with illustrations]*
 
 ### Products Management
-*[Screenshot placeholder: Products page showing the CRUD interface with product list, search, and action buttons]*
+*[Screenshot placeholder: Products page showing the CRUD interface with product list, search, thumbnails, and action buttons]*
 
 ### Shopping Cart
-*[Screenshot placeholder: Cart page with items, quantities, and checkout button]*
+*[Screenshot placeholder: Cart page with items, quantities, thumbnails, and checkout button]*
 
 ### Kiosk Mode
-*[Screenshot placeholder: Kiosk page displaying QR code and fullscreen controls]*
+*[Screenshot placeholder: Kiosk page displaying QR code, kiosk illustration, and fullscreen controls]*
 
 ## Development Notes
 

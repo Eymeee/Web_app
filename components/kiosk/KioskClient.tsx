@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Image from 'next/image';
 import { QRCodeCanvas } from 'qrcode.react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -45,16 +46,17 @@ export function KioskClient() {
         description="Scan the QR code to access the app on mobile devices, or use fullscreen mode for display"
       />
 
-      <div className="mx-auto max-w-2xl space-y-6">
-        <div className="rounded-2xl border-2 border-slate-200 bg-white p-8 text-center shadow-sm">
-          <h2 className="mb-2 text-lg font-semibold text-slate-900">
-            Scan to Access
-          </h2>
-          <p className="mb-6 text-sm text-slate-600">
-            Use your mobile device camera to scan the QR code below
-          </p>
-          <div className="flex justify-center">
-            <div className="rounded-2xl border-2 border-slate-100 bg-slate-50 p-6 shadow-inner">
+      <div className="mx-auto max-w-3xl space-y-6">
+        <div className="flex flex-col items-center gap-8 rounded-2xl border-2 border-slate-200 bg-white p-8 text-center shadow-sm lg:flex-row lg:justify-center lg:gap-12">
+          <div className="order-2 flex flex-1 flex-col items-center lg:order-1">
+            <h2 className="mb-2 text-lg font-semibold text-slate-900">
+              Scan to Access
+            </h2>
+            <p className="mb-6 text-sm text-slate-600">
+              Use your mobile device camera to scan the QR code below
+            </p>
+            <div className="flex justify-center">
+              <div className="rounded-2xl border-2 border-slate-100 bg-slate-50 p-6 shadow-inner">
               {url ? (
                 <QRCodeCanvas
                   value={url}
@@ -70,7 +72,18 @@ export function KioskClient() {
               )}
             </div>
           </div>
-          <p className="mt-6 break-all font-mono text-xs text-slate-400">{url}</p>
+            <p className="mt-6 break-all font-mono text-xs text-slate-400">{url}</p>
+          </div>
+          <div className="order-1 hidden h-48 w-48 shrink-0 lg:order-2 lg:block xl:h-56 xl:w-56">
+            <Image
+              src="/illustrations/kiosk.svg"
+              alt=""
+              width={224}
+              height={224}
+              className="h-full w-full object-contain opacity-90"
+              aria-hidden
+            />
+          </div>
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">

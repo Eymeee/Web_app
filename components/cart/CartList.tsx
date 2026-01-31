@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { ProductThumb } from '@/components/product-thumb';
 import { Input } from '@/components/ui/input';
 import {
   Table,
@@ -59,9 +60,16 @@ export function CartList({ items, onUpdate, onDelete, isSubmitting }: CartListPr
             const line = price * item.quantity;
             return (
               <TableRow key={item.id}>
-                <TableCell className="font-medium">
-                  {item.product?.name ?? '—'}
-                  <p className="text-xs text-slate-500">{item.product?.sku ?? ''}</p>
+                <TableCell>
+                  <div className="flex items-center gap-3">
+                    <ProductThumb name={item.product?.name ?? '—'} size="sm" />
+                    <div>
+                      <div className="font-medium">{item.product?.name ?? '—'}</div>
+                      {item.product?.sku && (
+                        <p className="text-xs text-slate-500">{item.product.sku}</p>
+                      )}
+                    </div>
+                  </div>
                 </TableCell>
                 <TableCell className="hidden sm:table-cell">{price.toFixed(2)} €</TableCell>
                 <TableCell>
