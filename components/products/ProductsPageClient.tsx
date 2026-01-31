@@ -67,7 +67,27 @@ export function ProductsPageClient() {
       if (!response.ok || json.error) {
         throw new Error(json.error?.message ?? 'Erreur de chargement');
       }
-      setProducts(json.data ?? []);
+      const productList = json.data ?? [];
+      
+      // Auto-seed if database is empty
+      if (productList.length === 0) {
+        console.log('[v0] No products found, auto-seeding...');
+        try {
+          const seedResponse = await fetch('/api/seed', { method: 'POST' });
+          if (seedResponse.ok) {
+            // Refetch after seeding
+            const refetchResponse = await fetch('/api/products', { cache: 'no-store' });
+            const refetchJson = (await refetchResponse.json()) as ApiResponse<Product[]>;
+            setProducts(refetchJson.data ?? []);
+            toast.success('Default catalog loaded');
+            return;
+          }
+        } catch (seedError) {
+          console.error('[v0] Seed failed:', seedError);
+        }
+      }
+      
+      setProducts(productList);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Erreur inattendue';
       toast.error(message);
