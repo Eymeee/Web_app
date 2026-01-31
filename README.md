@@ -42,9 +42,11 @@ npm run db:generate
 # Run migrations
 npm run db:migrate
 
-# Seed with sample data
+# Seed database with default catalog
 npm run db:seed
 ```
+
+**Note:** Default supermarket catalog is preloaded. The seed includes 20 essential products (bananas, apples, milk, eggs, bread, etc.). The seed is idempotent - running it multiple times won't create duplicates.
 
 The database file is stored at `prisma/dev.db` (automatically gitignored).
 
@@ -204,7 +206,8 @@ curl -X POST http://localhost:3000/api/detections \
 ### Database
 - The SQLite database file (`prisma/dev.db`) is gitignored
 - Migrations are version-controlled in `prisma/migrations/`
-- Use `npm run db:seed` to reset with sample data
+- Use `npm run db:seed` to add the default catalog (idempotent)
+- Use `npm run db:reset` to completely reset the database and re-seed
 
 ### Environment Variables
 Create a `.env.local` file (gitignored) for any environment-specific configuration:
