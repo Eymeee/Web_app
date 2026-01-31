@@ -164,19 +164,19 @@ export function ProductsPageClient() {
       />
 
       {products.length > 0 && (
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="glass-card p-4">
           <Input
             placeholder="Search by name or SKU..."
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            className="max-w-sm"
+            className="max-w-sm bg-white/80"
             aria-label="Search products"
           />
         </div>
       )}
 
       {loading ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="glass-card p-6">
           <TableSkeleton rows={5} columns={5} />
         </div>
       ) : filtered.length === 0 && products.length === 0 ? (
@@ -215,29 +215,32 @@ export function ProductsPageClient() {
           }
         />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        <div className="glass-card overflow-hidden p-0">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Product</TableHead>
-                <TableHead className="hidden sm:table-cell">SKU</TableHead>
-                <TableHead className="hidden md:table-cell">Created</TableHead>
-                <TableHead className="text-right">Price</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+              <TableRow className="border-b border-slate-200/50 bg-gradient-to-r from-slate-50/50 to-blue-50/50">
+                <TableHead className="font-bold text-slate-900">Product</TableHead>
+                <TableHead className="hidden font-bold text-slate-900 sm:table-cell">SKU</TableHead>
+                <TableHead className="hidden font-bold text-slate-900 md:table-cell">Created</TableHead>
+                <TableHead className="text-right font-bold text-slate-900">Price</TableHead>
+                <TableHead className="text-right font-bold text-slate-900">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filtered.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell className="font-medium">{product.name}</TableCell>
-                  <TableCell className="hidden sm:table-cell">
+              {filtered.map((product, index) => (
+                <TableRow 
+                  key={product.id}
+                  className={`transition-colors hover:bg-blue-50/30 ${index % 2 === 0 ? 'bg-white/40' : 'bg-slate-50/20'}`}
+                >
+                  <TableCell className="font-semibold text-slate-900">{product.name}</TableCell>
+                  <TableCell className="hidden text-slate-600 sm:table-cell">
                     {product.sku ?? '—'}
                   </TableCell>
-                  <TableCell className="hidden md:table-cell">
+                  <TableCell className="hidden text-slate-600 md:table-cell">
                     {new Date(product.createdAt).toLocaleDateString('fr-FR')}
                   </TableCell>
-                  <TableCell className="text-right">
-                    {product.price.toFixed(2)} €
+                  <TableCell className="text-right font-bold text-blue-600">
+                    €{product.price.toFixed(2)}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
@@ -246,6 +249,7 @@ export function ProductsPageClient() {
                         size="sm"
                         onClick={() => setEditTarget(product)}
                         disabled={submitting}
+                        className="border-blue-200 bg-white/80 hover:bg-blue-50"
                       >
                         Edit
                       </Button>
@@ -254,6 +258,7 @@ export function ProductsPageClient() {
                         size="sm"
                         onClick={() => setDeleteTarget(product)}
                         disabled={submitting}
+                        className="hover:bg-red-50 hover:text-red-600"
                       >
                         Delete
                       </Button>

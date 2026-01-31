@@ -25,13 +25,20 @@ export function Navbar() {
   };
 
   return (
-    <div className="border-b border-slate-200 bg-white">
+    <div className="glass-nav sticky top-0 z-50 shadow-sm">
       <div className="container-page flex items-center justify-between gap-4 py-4">
         <Link
           href="/"
-          className="text-sm font-semibold tracking-[0.2em] text-slate-800 transition-colors hover:text-slate-600"
+          className="flex items-center gap-2 text-sm font-bold tracking-wider text-slate-900 transition-colors hover:text-blue-600"
         >
-          SMART-GROCERY-BOX
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-md">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+              <path d="M3 6h18" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+          </div>
+          <span className="hidden sm:inline">SMART GROCERY</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -42,8 +49,8 @@ export function Navbar() {
               href={item.href}
               className={
                 isActive(item.href)
-                  ? 'rounded-lg px-3 py-2 text-sm font-medium transition-colors bg-slate-100 text-slate-900'
-                  : 'rounded-lg px-3 py-2 text-sm font-medium transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  ? 'rounded-lg px-4 py-2 text-sm font-semibold transition-all bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                  : 'rounded-lg px-4 py-2 text-sm font-medium transition-all text-slate-700 hover:bg-white/80 hover:text-slate-900 hover:shadow-sm'
               }
               aria-current={isActive(item.href) ? 'page' : undefined}
             >
@@ -92,10 +99,10 @@ export function Navbar() {
       {/* Mobile Navigation */}
       {mobileMenuOpen && (
         <nav
-          className="border-t border-slate-200 bg-white px-4 py-3 md:hidden"
+          className="border-t border-white/20 bg-white/80 px-4 py-3 backdrop-blur-md md:hidden"
           aria-label="Mobile navigation"
         >
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-2">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -103,8 +110,8 @@ export function Navbar() {
                 onClick={() => setMobileMenuOpen(false)}
                 className={
                   isActive(item.href)
-                    ? 'rounded-lg px-4 py-2.5 text-sm font-medium transition-colors bg-slate-100 text-slate-900'
-                    : 'rounded-lg px-4 py-2.5 text-sm font-medium transition-colors text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                    ? 'rounded-lg px-4 py-3 text-sm font-semibold transition-all bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                    : 'rounded-lg px-4 py-3 text-sm font-medium transition-all text-slate-700 hover:bg-white/80 hover:text-slate-900 hover:shadow-sm'
                 }
                 aria-current={isActive(item.href) ? 'page' : undefined}
               >
