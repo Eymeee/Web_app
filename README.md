@@ -2,6 +2,40 @@
 
 A modern web application for managing grocery products, shopping carts, and transactions. Built with Next.js 14, Prisma, and TypeScript.
 
+---
+
+## How to Use This Application
+
+### Getting Started
+
+When you first open the app, you'll land on the **Dashboard** - a central hub showing quick stats and navigation cards to all features. The application comes pre-loaded with 20 default supermarket products, so you can start exploring immediately.
+
+### User Journey: Processing a Purchase
+
+1. **Browse the Catalog**: Click "Products" in the navigation bar to view all available items (bananas, apples, milk, eggs, bread, etc.)
+2. **Add Items to Cart**: Navigate to "Cart", select a product from the dropdown, choose a quantity, and click "Add to Cart"
+3. **Review & Adjust**: See your items listed with prices. You can modify quantities directly or remove items
+4. **Checkout**: Click the "Checkout" button to complete your purchase - the cart clears and a transaction is recorded
+5. **View History**: Go to "Transactions" to see your completed purchase with a full breakdown of items and prices
+
+### Key Features at a Glance
+
+| Section | What You Can Do |
+|---------|-----------------|
+| **Dashboard** | View stats (product count, cart items, last transaction) and quick-navigate to any feature |
+| **Products** | Search, add, edit, or delete products in your catalog |
+| **Cart** | Add items, adjust quantities, remove items, and complete checkout |
+| **Transactions** | View all past transactions with detailed line-item breakdowns |
+| **Kiosk** | Generate a QR code for mobile access, toggle fullscreen for display mode |
+
+### Tips
+
+- **Auto-Seeding**: If the product list is empty, the app automatically loads 20 default grocery items
+- **Search**: Use the search bar on the Products page to quickly find items by name or SKU
+- **Real-time Updates**: All totals and counts update instantly as you make changes
+
+---
+
 ## Features
 
 ### Core Functionality
