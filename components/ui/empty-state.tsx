@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import { cn } from '@/lib/utils';
 
 interface EmptyStateProps {
   title: string;
@@ -16,12 +15,10 @@ export function EmptyState({
   action,
   className
 }: EmptyStateProps) {
+  const baseClasses = 'flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/50 px-6 py-12 text-center';
   return (
     <div
-      className={cn(
-        'flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/50 px-6 py-12 text-center',
-        className
-      )}
+      className={className ? `${baseClasses} ${className}` : baseClasses}
     >
       {icon && <div className="mb-4 text-slate-400">{icon}</div>}
       <h3 className="text-base font-semibold text-slate-900">{title}</h3>

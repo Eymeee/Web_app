@@ -1,16 +1,12 @@
-import { cn } from '@/lib/utils';
-
 interface SkeletonProps {
   className?: string;
 }
 
 export function Skeleton({ className }: SkeletonProps) {
+  const baseClasses = 'animate-pulse rounded-md bg-slate-200';
   return (
     <div
-      className={cn(
-        'animate-pulse rounded-md bg-slate-200',
-        className
-      )}
+      className={className ? `${baseClasses} ${className}` : baseClasses}
       aria-label="Loading..."
       role="status"
     />

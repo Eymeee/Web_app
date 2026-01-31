@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
 
 interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -17,7 +16,7 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
       <div className="space-y-2">
         <Label
           htmlFor={fieldId}
-          className={cn(error && 'text-red-600')}
+          className={error ? 'text-red-600' : ''}
         >
           {label}
           {props.required && <span className="ml-1 text-red-500">*</span>}
@@ -29,10 +28,11 @@ export const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
           aria-describedby={
             error ? `${fieldId}-error` : helperText ? `${fieldId}-description` : undefined
           }
-          className={cn(
-            error && 'border-red-500 focus-visible:ring-red-500',
-            className
-          )}
+          className={
+            error 
+              ? `border-red-500 focus-visible:ring-red-500 ${className || ''}` 
+              : className || ''
+          }
           {...props}
         />
         {error && (
