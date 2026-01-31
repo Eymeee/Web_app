@@ -1,18 +1,54 @@
+'use client';
+
 import Link from 'next/link';
 import { FeatureCard } from '@/components/ui/feature-card';
 import { StatCard } from '@/components/ui/stat-card';
 import { Button } from '@/components/ui/button';
-import { db } from '@/lib/db';
+import { useEffect, useState } from 'react';
 
-export const revalidate = 0;
+interface Stats {
+  productsCount: number;
+  cartItemsCount: number;
+  lastTransaction: { total: number; createdAt: string } | null;
+}
 
-export default async function DashboardPage() {
-  // Fetch simple counts for stats - these are derived from existing data, not new features
-  const productsCount = await db.product.count();
-  const cartItemsCount = await db.cartItem.count();
-  const lastTransaction = await db.transaction.findFirst({
-    orderBy: { createdAt: 'desc' }
+export default function DashboardPage() {
+  const [stats, setStats] = useState<Stats>({
+    productsCount: 0,
+    cartItemsCount: 0,
+    lastTransaction: null
   });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        // Fetch products count
+        const productsRes = await fetch('/api/products');
+        const products = await productsRes.json();
+        
+        // Fetch cart
+        const cartRes = await fetch('/api/cart');
+        const cart = await cartRes.json();
+        
+        // Fetch transactions
+        const transactionsRes = await fetch('/api/transactions');
+        const transactions = await transactionsRes.json();
+        
+        setStats({
+          productsCount: Array.isArray(products) ? products.length : 0,
+          cartItemsCount: cart?.items?.length ?? 0,
+          lastTransaction: transactions?.[0] ?? null
+        });
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    void fetchStats();
+  }, []);
 
   return (
     <div className="space-y-12">
@@ -44,7 +80,7 @@ export default async function DashboardPage() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <StatCard
             label="Products in Catalog"
-            value={productsCount}
+            value={loading ? '...' : stats.productsCount}
             icon={
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
@@ -55,7 +91,7 @@ export default async function DashboardPage() {
           />
           <StatCard
             label="Items in Cart"
-            value={cartItemsCount}
+            value={loading ? '...' : stats.cartItemsCount}
             icon={
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="8" cy="21" r="1" />
@@ -66,14 +102,14 @@ export default async function DashboardPage() {
           />
           <StatCard
             label="Last Transaction"
-            value={lastTransaction ? `€${lastTransaction.total.toFixed(2)}` : 'N/A'}
+            value={loading ? '...' : stats.lastTransaction ? `€${stats.lastTransaction.total.toFixed(2)}` : 'N/A'}
             icon={
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="12" x2="12" y1="2" y2="22" />
                 <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
               </svg>
             }
-            trend={lastTransaction ? new Date(lastTransaction.createdAt).toLocaleDateString() : undefined}
+            trend={stats.lastTransaction && !loading ? new Date(stats.lastTransaction.createdAt).toLocaleDateString() : undefined}
           />
         </div>
       </section>
