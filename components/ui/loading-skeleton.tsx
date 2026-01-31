@@ -1,12 +1,14 @@
 interface SkeletonProps {
   className?: string;
+  style?: React.CSSProperties;
 }
 
-export function Skeleton({ className }: SkeletonProps) {
+export function Skeleton({ className, style }: SkeletonProps) {
   const baseClasses = 'animate-pulse rounded-md bg-slate-200';
   return (
     <div
       className={className ? `${baseClasses} ${className}` : baseClasses}
+      style={style}
       aria-label="Loading..."
       role="status"
     />

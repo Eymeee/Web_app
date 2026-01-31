@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160" fill="none" aria-hidden="true">
+  <!-- Receipt -->
+  <rect x="60" y="35" width="80" height="100" rx="4" stroke="#94a3b8" stroke-width="2" stroke-opacity="0.5" fill="none"/>
+  <!-- Receipt lines -->
+  <line x1="75" y1="55" x2="125" y2="55" stroke="#94a3b8" stroke-width="1" stroke-opacity="0.35"/>
+  <line x1="75" y1="75" x2="125" y2="75" stroke="#94a3b8" stroke-width="1" stroke-opacity="0.3"/>
+  <line x1="75" y1="95" x2="125" y2="95" stroke="#94a3b8" stroke-width="1" stroke-opacity="0.3"/>
+  <!-- Euro symbol -->
+  <path d="M100 105 Q85 100 85 115 Q85 128 100 125 M95 100 L105 100 M95 125 L105 125" stroke="#64748b" stroke-width="2" stroke-opacity="0.6" fill="none" stroke-linecap="round"/>
+</svg>

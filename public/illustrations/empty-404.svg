@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160" fill="none" aria-hidden="true">
+  <!-- Compass/map hint -->
+  <circle cx="100" cy="85" r="50" stroke="#94a3b8" stroke-width="2" stroke-opacity="0.4" fill="none"/>
+  <circle cx="100" cy="85" r="35" stroke="#94a3b8" stroke-width="1.5" stroke-opacity="0.3" fill="none"/>
+  <!-- Question mark -->
+  <path d="M100 55 Q115 45 120 60 Q125 72 110 82 L110 95 M100 105 v8" stroke="#64748b" stroke-width="2.5" stroke-opacity="0.6" fill="none" stroke-linecap="round"/>
+  <!-- Arrow indicating "go back" -->
+  <path d="M60 130 L45 145 L60 160 M45 145 L100 145" stroke="#94a3b8" stroke-width="2" stroke-opacity="0.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
