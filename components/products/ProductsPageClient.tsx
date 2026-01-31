@@ -12,6 +12,9 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
+import { PageHeader } from '@/components/ui/page-header';
+import { EmptyState } from '@/components/ui/empty-state';
+import { TableSkeleton } from '@/components/ui/loading-skeleton';
 import { ProductDialog } from '@/components/products/ProductDialog';
 import { ConfirmDialog } from '@/components/products/ConfirmDialog';
 
@@ -152,49 +155,79 @@ export function ProductsPageClient() {
 
   return (
     <section className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold">Products</h1>
-          <p className="text-sm text-slate-500">Gestion CRUD via /api/products</p>
+      <PageHeader
+        title="Products"
+        description="Manage your product catalog with full CRUD operations"
+        actions={
+          <Button onClick={() => setCreateOpen(true)}>Add Product</Button>
+        }
+      />
+
+      {products.length > 0 && (
+        <div className="flex flex-wrap items-center gap-3">
+          <Input
+            placeholder="Search by name or SKU..."
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            className="max-w-sm"
+            aria-label="Search products"
+          />
         </div>
-        <Button onClick={() => setCreateOpen(true)}>Ajouter</Button>
-      </div>
+      )}
 
-      <div className="flex flex-wrap items-center gap-3">
-        <Input
-          placeholder="Rechercher par nom ou SKU"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          className="max-w-sm"
+      {loading ? (
+        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <TableSkeleton rows={5} columns={5} />
+        </div>
+      ) : filtered.length === 0 && products.length === 0 ? (
+        <EmptyState
+          title="No products yet"
+          description="Get started by creating your first product in the catalog"
+          icon={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+              <path d="M3 6h18" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+          }
+          action={
+            <Button onClick={() => setCreateOpen(true)}>Add First Product</Button>
+          }
         />
-      </div>
-
-      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Produit</TableHead>
-              <TableHead className="hidden sm:table-cell">SKU</TableHead>
-              <TableHead className="hidden md:table-cell">Créé</TableHead>
-              <TableHead className="text-right">Prix</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loading ? (
+      ) : filtered.length === 0 ? (
+        <EmptyState
+          title="No results found"
+          description={`No products match "${query}". Try a different search term.`}
+          action={
+            <Button variant="outline" onClick={() => setQuery('')}>
+              Clear Search
+            </Button>
+          }
+        />
+      ) : (
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={5} className="py-8 text-center text-sm">
-                  Chargement...
-                </TableCell>
+                <TableHead>Product</TableHead>
+                <TableHead className="hidden sm:table-cell">SKU</TableHead>
+                <TableHead className="hidden md:table-cell">Created</TableHead>
+                <TableHead className="text-right">Price</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
-            ) : filtered.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5} className="py-8 text-center text-sm">
-                  Aucun produit trouvé.
-                </TableCell>
-              </TableRow>
-            ) : (
-              filtered.map((product) => (
+            </TableHeader>
+            <TableBody>
+              {filtered.map((product) => (
                 <TableRow key={product.id}>
                   <TableCell className="font-medium">{product.name}</TableCell>
                   <TableCell className="hidden sm:table-cell">
@@ -212,6 +245,7 @@ export function ProductsPageClient() {
                         variant="outline"
                         size="sm"
                         onClick={() => setEditTarget(product)}
+                        disabled={submitting}
                       >
                         Edit
                       </Button>
@@ -219,17 +253,18 @@ export function ProductsPageClient() {
                         variant="ghost"
                         size="sm"
                         onClick={() => setDeleteTarget(product)}
+                        disabled={submitting}
                       >
                         Delete
                       </Button>
                     </div>
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
 
       <ProductDialog
         open={createOpen}
