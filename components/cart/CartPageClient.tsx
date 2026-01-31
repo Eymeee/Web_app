@@ -5,6 +5,9 @@ import { toast } from 'sonner';
 import { AddToCartForm, type AddFormValues } from '@/components/cart/AddToCartForm';
 import { CartList, type CartItem } from '@/components/cart/CartList';
 import { Button } from '@/components/ui/button';
+import { PageHeader } from '@/components/ui/page-header';
+import { EmptyState } from '@/components/ui/empty-state';
+import { CardSkeleton } from '@/components/ui/loading-skeleton';
 
 import type { ApiError } from '@/lib/errors';
 
@@ -145,39 +148,80 @@ export function CartPageClient() {
   }
 
   const total = cart?.total ?? 0;
+  const cartEmpty = (cart?.items.length ?? 0) === 0;
 
   return (
     <section className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold">Panier</h1>
-          <p className="text-sm text-slate-500">Gérez les articles et validez la transaction.</p>
-        </div>
-      </div>
-
-      <AddToCartForm
-        products={products.map((p) => ({ id: p.id, name: `${p.name} (${p.price.toFixed(2)} €)` }))}
-        onSubmit={handleAdd}
-        isSubmitting={submitting}
+      <PageHeader
+        title="Shopping Cart"
+        description="Add items to your cart and complete checkout to create a transaction"
       />
 
-      <CartList
-        items={cart?.items ?? []}
-        onUpdate={handleUpdate}
-        onDelete={handleDelete}
-        isSubmitting={submitting}
-      />
+      {loading ? (
+        <CardSkeleton count={2} />
+      ) : (
+        <>
+          {products.length > 0 && (
+            <AddToCartForm
+              products={products.map((p) => ({
+                id: p.id,
+                name: `${p.name} (${p.price.toFixed(2)} €)`
+              }))}
+              onSubmit={handleAdd}
+              isSubmitting={submitting}
+            />
+          )}
 
-      <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-        <div className="text-sm text-slate-500">Total panier</div>
-        <div className="text-2xl font-semibold text-slate-900">{total.toFixed(2)} €</div>
-        <Button className="sm:w-48" disabled={submitting || (cart?.items.length ?? 0) === 0} onClick={() => void handleCheckout()}>
-          Valider transaction
-        </Button>
-      </div>
+          {cartEmpty && !loading ? (
+            <EmptyState
+              title="Your cart is empty"
+              description="Add products to your cart to get started with a transaction"
+              icon={
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="8" cy="21" r="1" />
+                  <circle cx="19" cy="21" r="1" />
+                  <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                </svg>
+              }
+            />
+          ) : (
+            <>
+              <CartList
+                items={cart?.items ?? []}
+                onUpdate={handleUpdate}
+                onDelete={handleDelete}
+                isSubmitting={submitting}
+              />
 
-      {loading && (
-        <p className="text-sm text-slate-500">Chargement...</p>
+              <div className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-1">
+                  <div className="text-sm text-slate-500">Cart Total</div>
+                  <div className="text-3xl font-bold text-slate-900">
+                    {total.toFixed(2)} €
+                  </div>
+                </div>
+                <Button
+                  size="lg"
+                  className="sm:w-48"
+                  disabled={submitting || cartEmpty}
+                  onClick={() => void handleCheckout()}
+                >
+                  {submitting ? 'Processing...' : 'Checkout'}
+                </Button>
+              </div>
+            </>
+          )}
+        </>
       )}
     </section>
   );

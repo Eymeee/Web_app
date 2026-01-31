@@ -47,15 +47,20 @@ export function AddToCartForm({ products, onSubmit, isSubmitting }: AddToCartFor
 
   return (
     <form
-      className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-end"
+      className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-end"
       onSubmit={(event) => {
         void handleSubmit(onValid)(event);
       }}
     >
-      <div className="flex-1 space-y-1">
-        <label className="text-sm font-medium text-slate-700">Produit</label>
+      <div className="flex-1 space-y-2">
+        <label htmlFor="productId" className="text-sm font-medium text-slate-700">
+          Select Product
+        </label>
         <select
-          className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+          id="productId"
+          className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950"
+          aria-invalid={errors.productId ? 'true' : 'false'}
+          aria-describedby={errors.productId ? 'productId-error' : undefined}
           {...register('productId')}
         >
           {products.map((product) => (
@@ -65,18 +70,31 @@ export function AddToCartForm({ products, onSubmit, isSubmitting }: AddToCartFor
           ))}
         </select>
         {errors.productId ? (
-          <p className="text-xs text-rose-600">{errors.productId.message}</p>
+          <p id="productId-error" className="text-sm font-medium text-red-600" role="alert">
+            {errors.productId.message}
+          </p>
         ) : null}
       </div>
-      <div className="w-full sm:w-28">
-        <label className="text-sm font-medium text-slate-700">Quantité</label>
-        <Input type="number" min={1} {...register('quantity', { valueAsNumber: true })} />
+      <div className="w-full space-y-2 sm:w-32">
+        <label htmlFor="quantity" className="text-sm font-medium text-slate-700">
+          Quantity
+        </label>
+        <Input
+          id="quantity"
+          type="number"
+          min={1}
+          aria-invalid={errors.quantity ? 'true' : 'false'}
+          aria-describedby={errors.quantity ? 'quantity-error' : undefined}
+          {...register('quantity', { valueAsNumber: true })}
+        />
         {errors.quantity ? (
-          <p className="text-xs text-rose-600">{errors.quantity.message}</p>
+          <p id="quantity-error" className="text-sm font-medium text-red-600" role="alert">
+            {errors.quantity.message}
+          </p>
         ) : null}
       </div>
-      <Button type="submit" className="sm:w-36" disabled={isSubmitting}>
-        Ajouter
+      <Button type="submit" className="sm:w-36" disabled={isSubmitting || products.length === 0}>
+        {isSubmitting ? 'Adding...' : 'Add to Cart'}
       </Button>
     </form>
   );

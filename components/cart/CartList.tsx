@@ -69,6 +69,8 @@ export function CartList({ items, onUpdate, onDelete, isSubmitting }: CartListPr
                     type="number"
                     min={1}
                     defaultValue={item.quantity}
+                    aria-label={`Quantity for ${item.product?.name ?? 'product'}`}
+                    disabled={isSubmitting}
                     onChange={(event) => {
                       event.currentTarget.dataset.qty = event.target.value;
                     }}
@@ -77,8 +79,13 @@ export function CartList({ items, onUpdate, onDelete, isSubmitting }: CartListPr
                         event.currentTarget.dataset.qty ?? event.currentTarget.value,
                         10
                       );
-                      const qty = Number.isNaN(value) ? item.quantity : value;
+                      const qty = Number.isNaN(value) || value < 1 ? item.quantity : value;
                       void onUpdate(item.id, qty);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') {
+                        event.currentTarget.blur();
+                      }
                     }}
                   />
                 </TableCell>
@@ -89,8 +96,9 @@ export function CartList({ items, onUpdate, onDelete, isSubmitting }: CartListPr
                     size="sm"
                     disabled={isSubmitting}
                     onClick={() => void onDelete(item.id)}
+                    aria-label={`Remove ${item.product?.name ?? 'product'} from cart`}
                   >
-                    Supprimer
+                    Remove
                   </Button>
                 </TableCell>
               </TableRow>

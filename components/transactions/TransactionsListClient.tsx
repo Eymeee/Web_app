@@ -11,6 +11,9 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
+import { PageHeader } from '@/components/ui/page-header';
+import { EmptyState } from '@/components/ui/empty-state';
+import { TableSkeleton } from '@/components/ui/loading-skeleton';
 import type { ApiError } from '@/lib/errors';
 
 export type TransactionItem = {
@@ -64,43 +67,68 @@ export function TransactionsListClient() {
 
   return (
     <section className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Transactions</h1>
-          <p className="text-sm text-slate-500">Historique des encaissements.</p>
-        </div>
-        <Button variant="outline" size="sm" onClick={() => void load()} disabled={loading}>
-          Rafraîchir
-        </Button>
-      </div>
+      <PageHeader
+        title="Transactions"
+        description="View your complete transaction history and order details"
+        actions={
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => void load()}
+            disabled={loading}
+          >
+            Refresh
+          </Button>
+        }
+      />
 
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead className="text-right">Total</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loading ? (
+      {loading ? (
+        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+          <TableSkeleton rows={5} columns={4} />
+        </div>
+      ) : transactions.length === 0 ? (
+        <EmptyState
+          title="No transactions yet"
+          description="Complete a checkout from your cart to create your first transaction"
+          icon={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="12" x2="12" y1="2" y2="22" />
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+            </svg>
+          }
+          action={
+            <Button asChild>
+              <Link href="/cart">Go to Cart</Link>
+            </Button>
+          }
+        />
+      ) : (
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={4} className="py-8 text-center text-sm">
-                  Chargement...
-                </TableCell>
+                <TableHead>Transaction ID</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead className="text-right">Total</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
-            ) : transactions.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={4} className="py-8 text-center text-sm">
-                  Aucune transaction.
-                </TableCell>
-              </TableRow>
-            ) : (
-              transactions.map((txn) => (
+            </TableHeader>
+            <TableBody>
+              {transactions.map((txn) => (
                 <TableRow key={txn.id}>
-                  <TableCell className="font-mono text-xs sm:text-sm">{txn.id}</TableCell>
+                  <TableCell className="font-mono text-xs sm:text-sm">
+                    {txn.id}
+                  </TableCell>
                   <TableCell>
                     {new Date(txn.createdAt).toLocaleString('fr-FR', {
                       dateStyle: 'short',
@@ -112,15 +140,15 @@ export function TransactionsListClient() {
                   </TableCell>
                   <TableCell className="text-right">
                     <Button asChild size="sm" variant="outline">
-                      <Link href={`/transactions/${txn.id}`}>Voir</Link>
+                      <Link href={`/transactions/${txn.id}`}>View Details</Link>
                     </Button>
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </section>
   );
 }

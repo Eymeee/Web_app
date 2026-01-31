@@ -10,6 +10,8 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
+import { PageHeader } from '@/components/ui/page-header';
+import { CardSkeleton } from '@/components/ui/loading-skeleton';
 import type { ApiError } from '@/lib/errors';
 
 export type TransactionItem = {
@@ -73,71 +75,95 @@ export function TransactionDetailClient() {
 
   return (
     <section className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Transaction</h1>
-        <p className="text-sm text-slate-500">Détails et lignes.</p>
-      </div>
+      <PageHeader
+        title={transaction ? `Transaction ${transaction.id}` : 'Transaction Details'}
+        description="View complete transaction information and line items"
+      />
 
       {loading || !transaction ? (
-        <p className="text-sm text-slate-500">Chargement...</p>
+        <CardSkeleton count={2} />
       ) : (
-        <div className="space-y-4">
-          <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-            <div className="grid gap-1 text-sm sm:grid-cols-2">
-              <div>
-                <span className="text-slate-500">ID</span>
-                <p className="font-mono text-sm">{transaction.id}</p>
+        <div className="space-y-6">
+          <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="mb-4 text-base font-semibold text-slate-900">
+              Transaction Information
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div className="space-y-1">
+                <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                  Transaction ID
+                </span>
+                <p className="font-mono text-sm text-slate-900">{transaction.id}</p>
               </div>
-              <div>
-                <span className="text-slate-500">Date</span>
-                <p>
+              <div className="space-y-1">
+                <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                  Date & Time
+                </span>
+                <p className="text-sm text-slate-900">
                   {new Date(transaction.createdAt).toLocaleString('fr-FR', {
-                    dateStyle: 'short',
+                    dateStyle: 'medium',
                     timeStyle: 'short'
                   })}
                 </p>
               </div>
-              <div>
-                <span className="text-slate-500">Total</span>
-                <p className="text-lg font-semibold">{transaction.total.toFixed(2)} €</p>
+              <div className="space-y-1">
+                <span className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                  Total Amount
+                </span>
+                <p className="text-2xl font-bold text-slate-900">
+                  {transaction.total.toFixed(2)} €
+                </p>
               </div>
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Produit</TableHead>
-                  <TableHead className="hidden sm:table-cell">PU</TableHead>
-                  <TableHead>Qté</TableHead>
-                  <TableHead className="text-right">Ligne</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {transaction.items.length === 0 ? (
+          <div>
+            <h2 className="mb-3 text-base font-semibold text-slate-900">
+              Order Items ({transaction.items.length})
+            </h2>
+            <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell colSpan={4} className="py-8 text-center text-sm">
-                      Aucune ligne.
-                    </TableCell>
+                    <TableHead>Product</TableHead>
+                    <TableHead className="hidden sm:table-cell">Unit Price</TableHead>
+                    <TableHead>Quantity</TableHead>
+                    <TableHead className="text-right">Line Total</TableHead>
                   </TableRow>
-                ) : (
-                  transaction.items.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell className="font-medium">
-                        {item.product?.name ?? '—'}
-                        <p className="text-xs text-slate-500">{item.product?.sku ?? ''}</p>
-                      </TableCell>
-                      <TableCell className="hidden sm:table-cell">{item.unitPrice.toFixed(2)} €</TableCell>
-                      <TableCell>{item.quantity}</TableCell>
-                      <TableCell className="text-right font-semibold">
-                        {item.lineTotal.toFixed(2)} €
+                </TableHeader>
+                <TableBody>
+                  {transaction.items.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={4} className="py-8 text-center text-sm">
+                        No items in this transaction
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+                  ) : (
+                    transaction.items.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell className="font-medium">
+                          <div>
+                            {item.product?.name ?? 'Unknown Product'}
+                            {item.product?.sku && (
+                              <p className="text-xs text-slate-500">
+                                SKU: {item.product.sku}
+                              </p>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="hidden sm:table-cell">
+                          {item.unitPrice.toFixed(2)} €
+                        </TableCell>
+                        <TableCell>×{item.quantity}</TableCell>
+                        <TableCell className="text-right font-semibold">
+                          {item.lineTotal.toFixed(2)} €
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </div>
       )}

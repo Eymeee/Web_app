@@ -90,41 +90,74 @@ export function ProductDialog({
           }}
           className="space-y-4"
         >
-          <div className="space-y-1">
-            <Label htmlFor="name">Nom</Label>
-            <Input id="name" placeholder="Produit" {...register('name')} />
+          <div className="space-y-2">
+            <Label htmlFor="name">
+              Product Name <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="name"
+              placeholder="Enter product name"
+              autoComplete="off"
+              aria-invalid={errors.name ? 'true' : 'false'}
+              aria-describedby={errors.name ? 'name-error' : undefined}
+              {...register('name')}
+            />
             {errors.name && (
-              <p className="text-xs text-rose-600">{errors.name.message}</p>
+              <p id="name-error" className="text-sm font-medium text-red-600" role="alert">
+                {errors.name.message}
+              </p>
             )}
           </div>
-          <div className="space-y-1">
-            <Label htmlFor="price">Prix</Label>
+          <div className="space-y-2">
+            <Label htmlFor="price">
+              Price (€) <span className="text-red-500">*</span>
+            </Label>
             <Input
               id="price"
               type="number"
               step="0.01"
               min={0}
+              placeholder="0.00"
+              aria-invalid={errors.price ? 'true' : 'false'}
+              aria-describedby={errors.price ? 'price-error' : undefined}
               {...register('price', { valueAsNumber: true })}
             />
             {errors.price && (
-              <p className="text-xs text-rose-600">{errors.price.message}</p>
+              <p id="price-error" className="text-sm font-medium text-red-600" role="alert">
+                {errors.price.message}
+              </p>
             )}
           </div>
-          <div className="space-y-1">
-            <Label htmlFor="sku">SKU</Label>
-            <Input id="sku" placeholder="SKU" {...register('sku')} />
+          <div className="space-y-2">
+            <Label htmlFor="sku">SKU (Optional)</Label>
+            <Input
+              id="sku"
+              placeholder="Product SKU code"
+              autoComplete="off"
+              aria-invalid={errors.sku ? 'true' : 'false'}
+              aria-describedby={errors.sku ? 'sku-error' : undefined}
+              {...register('sku')}
+            />
             {errors.sku && (
-              <p className="text-xs text-rose-600">{errors.sku.message}</p>
+              <p id="sku-error" className="text-sm font-medium text-red-600" role="alert">
+                {errors.sku.message}
+              </p>
             )}
           </div>
           {error ? (
-            <p className="rounded-md bg-rose-50 px-3 py-2 text-sm text-rose-600">
+            <div
+              className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+              role="alert"
+            >
               {error}
-            </p>
+            </div>
           ) : null}
           <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+              Cancel
+            </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {submitLabel}
+              {isSubmitting ? 'Saving...' : submitLabel}
             </Button>
           </DialogFooter>
         </form>
