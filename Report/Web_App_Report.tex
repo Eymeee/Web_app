@@ -1,0 +1,249 @@
+\documentclass{rapportENSIAS}
+
+
+\usepackage{lipsum}
+\usepackage{tikz, pgfornament}
+\usetikzlibrary{shapes,arrows.meta,positioning,calc}
+\usepackage{subcaption}
+\usepackage{minted}
+\usemintedstyle{emacs}
+\definecolor{bg}{rgb}{0.95,0.95,0.95} % Adjust the RGB values as needed
+
+\usepackage{titlesec} % For customizing chapter and section titles
+\usepackage{tocloft} % For customizing the table of contents
+\usepackage{hyperref} % For adding hyperlinks
+\usepackage{acronym} % For acronyms (List of abreviations)
+\usepackage{setspace}
+\onehalfspacing
+
+\usepackage{lmodern}
+
+\usepackage[ruled,vlined]{algorithm2e}
+
+\usepackage{booktabs,longtable}
+
+
+\begin{document}
+	
+	%----------- Informations du rapport ---------
+	\titre{Web-Based Smart Grocery Box Interface for Catalog Management and Transactions} 
+	%\UE{UE PRO} %Nom de la UE
+	\sujet{\textcolor{red}{I}ngénierie \textcolor{red}{I}ntelligence \textcolor{red}{A}rtificielle - \textcolor{red}{2IA}} %Nom du sujet
+	
+	\enseignant{Mr. S. Ohamouddou} %Nom de l'enseignant
+	
+	\eleves{
+		SOSSEY Salmane, SALHI Aymane \\
+		ABAYAD Mehdi, SAOUD Omar \\
+		ROCHDI Zakaria
+	} %Nom des élèves
+	
+	\jury{
+		
+	}
+	%----------- Initialisation -------------------
+	
+	\fairepagedegarde
+	\fairemarges
+	
+	\tableofcontents
+	\newpage
+	
+	\chapter{Introduction et Analyse des besoins}
+	Le projet \textbf{Smart Grocery Box Web App} est une application web conçue pour faciliter l'utilisation d’un système de type \textit{Smart Grocery Box}. L'objectif est de proposer une interface simple, réactive et fiable permettant de :
+	\begin{itemize}
+		\item gérer un \textbf{catalogue de produits} (CRUD),
+		\item constituer un \textbf{panier} et modifier les quantités,
+		\item effectuer un \textbf{checkout} (validation du panier) pour créer une transaction,
+		\item consulter un \textbf{historique des transactions},
+		\item proposer un \textbf{mode Kiosk} (QR code + plein écran) comme élément d’innovation minimal.
+	\end{itemize}
+	
+	Le périmètre du projet est volontairement minimal et respecte les exigences essentielles du cahier des charges : \textbf{gestion complète des données}, \textbf{UI ergonomique}, \textbf{validation robuste}, \textbf{gestion d’erreurs}, \textbf{architecture claire} et \textbf{bonnes pratiques de sécurité web}.  
+	Dépôt GitHub : \url{https://github.com/Eymeee/Web_app}
+	
+	\section{Problématique}
+	Dans un contexte magasin/borne (ou assistant d'achat), l'utilisateur doit pouvoir sélectionner rapidement des articles, ajuster les quantités, puis finaliser l’achat. Sans application, l’usage du système reste incomplet : il manque un parcours clair et une persistance fiable.
+	
+	\section{Exigences fonctionnelles (essentielles)}
+	\begin{enumerate}
+		\item \textbf{CRUD Produits} : créer, consulter, modifier, supprimer des produits (nom, prix, SKU optionnel).
+		\item \textbf{Panier} : ajouter un produit avec quantité, modifier quantité, supprimer un item.
+		\item \textbf{Checkout} : transformer le panier en transaction enregistrée, puis vider le panier.
+		\item \textbf{Transactions} : lister les transactions et consulter le détail d’une transaction.
+		\item \textbf{Innovation minimale} : mode Kiosk (QR code + plein écran) pour accès rapide.
+	\end{enumerate}
+	
+	\section{Exigences non-fonctionnelles}
+	\begin{enumerate}
+		\item \textbf{UI réactive et ergonomique} (mobile-first, navigation claire).
+		\item \textbf{Validation robuste} côté client et serveur.
+		\item \textbf{Gestion d’erreurs} cohérente et compréhensible (messages + codes).
+		\item \textbf{Architecture claire} (séparation UI / API / logique / données).
+		\item \textbf{Sécurité web de base} : validation serveur systématique, erreurs sûres, pas de secrets en dur.
+	\end{enumerate}
+	
+	\section{User stories}
+	\begin{enumerate}
+		\item Consulter le catalogue pour choisir des produits.
+		\item Ajouter des produits au panier avec une quantité.
+		\item Ajuster les quantités ou supprimer des items.
+		\item Valider le panier pour enregistrer une transaction.
+		\item Consulter l’historique et le détail des transactions.
+		\item Accéder à l’app via un QR code (mode Kiosk).
+	\end{enumerate}
+	
+	\chapter{Conception}
+	
+	\section{Architecture générale}
+	L’application suit une architecture par couches :
+	\begin{itemize}
+		\item \textbf{Couche Présentation (UI)} : pages et composants (Dashboard, Products, Cart, Transactions, Kiosk).
+		\item \textbf{Couche API} : endpoints internes (routes Next.js) pour le CRUD et les opérations panier/checkout.
+		\item \textbf{Couche Logique Métier} : règles panier et checkout (calcul total, création transaction, vidage panier).
+		\item \textbf{Couche Données} : base SQLite via ORM (Prisma), migrations et seed.
+	\end{itemize}
+	
+	\section{Choix technologiques}
+	Les technologies retenues répondent aux objectifs de rapidité, maintenabilité et compatibilité locale :
+	\begin{itemize}
+		\item \textbf{Next.js 14 + TypeScript} : framework web moderne full-stack.
+		\item \textbf{Tailwind CSS + shadcn/ui} : UI cohérente, composantisée, productive.
+		\item \textbf{Prisma + SQLite} : persistance locale, migrations, seed.
+		\item \textbf{Zod (validation)} : cohérence client/serveur.
+	\end{itemize}
+	
+	\section{Modèle de données}
+	Le modèle est centré sur 4 entités principales :
+	
+	\begin{center}
+		\begin{tabular}{|p{3cm}|p{8.5cm}|p{3.2cm}|}
+			\hline
+			\textbf{Entité} & \textbf{Champs principaux} & \textbf{Rôle} \\
+			\hline
+			Product & id, name, price, sku (optionnel), createdAt, updatedAt & Catalogue produits \\
+			\hline
+			CartItem & id, productId, quantity, createdAt, updatedAt & Panier courant \\
+			\hline
+			Transaction & id, total, createdAt & Achat finalisé \\
+			\hline
+			TransactionItem & id, transactionId, productId, quantity, unitPrice, lineTotal & Détails transaction \\
+			\hline
+		\end{tabular}
+	\end{center}
+	
+	\section{Cas d’usage (texte)}
+	Les cas d’usage principaux sont :
+	\begin{itemize}
+		\item \textbf{Utilisateur} : consulter catalogue, gérer panier, checkout, consulter transactions, utiliser mode Kiosk.
+		\item \textbf{Administrateur} : CRUD sur produits.
+	\end{itemize}
+	
+	\section{Scénario de séquence : Checkout (description)}
+	\begin{enumerate}
+		\item L’utilisateur clique sur \textbf{Checkout} dans la page Panier.
+		\item L’API lit les \textbf{CartItem} et récupère les prix des \textbf{Product}.
+		\item L’API calcule les \textbf{lineTotal} et le \textbf{total}.
+		\item L’API crée une \textbf{Transaction} et ses \textbf{TransactionItem}.
+		\item L’API vide le panier (suppression des CartItem).
+		\item L’UI affiche un message de succès et redirige vers l’historique.
+	\end{enumerate}
+	
+	\chapter{Réalisation (Implémentation)}
+	
+	\section{Fonctionnalités réalisées}
+	\subsection{Catalogue produits (CRUD)}
+	La page \texttt{/products} permet de :
+	\begin{itemize}
+		\item afficher la liste des produits,
+		\item ajouter un produit (nom, prix, SKU optionnel),
+		\item modifier un produit,
+		\item supprimer un produit.
+	\end{itemize}
+	Les données sont validées (nom obligatoire, prix strictement positif).
+	
+	\subsection{Panier}
+	La page \texttt{/cart} permet de :
+	\begin{itemize}
+		\item ajouter un produit au panier avec une quantité,
+		\item modifier la quantité (quantité $\ge 1$),
+		\item supprimer un item,
+		\item afficher le total.
+	\end{itemize}
+	
+	\subsection{Checkout et Transactions}
+	Le checkout :
+	\begin{itemize}
+		\item enregistre une transaction avec ses lignes (produit, quantité, prix unitaire, total ligne),
+		\item vide le panier après succès,
+		\item gère les cas limites (panier vide).
+	\end{itemize}
+	La page \texttt{/transactions} liste les transactions et une page de détail affiche les items.
+	
+	\subsection{Pré-remplissage du catalogue (seed)}
+	Pour éviter un catalogue vide au premier lancement, un \textbf{seed} initialise une liste de produits de supermarché (produits courants avec prix). Cela permet à l’utilisateur de tester immédiatement : \textit{catalogue $\rightarrow$ panier $\rightarrow$ checkout}.
+	
+	\section{API interne (endpoints)}
+	Les routes API suivent un style REST :
+	\begin{itemize}
+		\item \texttt{GET/POST /api/products}
+		\item \texttt{GET/PUT/DELETE /api/products/:id}
+		\item \texttt{GET/POST /api/cart}
+		\item \texttt{PUT/DELETE /api/cart/:id}
+		\item \texttt{POST /api/checkout}
+		\item \texttt{GET /api/transactions}
+		\item \texttt{GET /api/transactions/:id}
+	\end{itemize}
+	
+	\section{Validation et gestion d’erreurs}
+	\begin{itemize}
+		\item Validation côté client (formulaires) et côté serveur (API).
+		\item Messages d’erreurs compréhensibles côté UI.
+		\item Réponses API cohérentes pour faciliter le debug et la robustesse.
+	\end{itemize}
+	
+	\chapter{Innovation et Tests}
+	\section{Innovation}
+	L’innovation minimale demandée est satisfaite via le \textbf{Mode Kiosk} :
+	\begin{itemize}
+		\item affichage d’un \textbf{QR code} pointant vers l’application (accès mobile rapide),
+		\item bouton \textbf{plein écran} pour usage sur tablette/borne,
+		\item partage du lien (copie).
+	\end{itemize}
+	Ce choix est simple, utile, et adapté à un contexte magasin (borne d’accès ou caisse).
+	
+	\section{Scénario de test manuel}
+	\begin{enumerate}
+		\item Lancer l’application et vérifier l’affichage du catalogue sur \texttt{/products}.
+		\item Ajouter 2 ou 3 produits au panier sur \texttt{/cart}.
+		\item Modifier une quantité et supprimer un item.
+		\item Cliquer sur \textbf{Checkout} et vérifier que le panier devient vide.
+		\item Ouvrir \texttt{/transactions} et vérifier l’apparition de la transaction.
+		\item Ouvrir le détail d’une transaction et vérifier les lignes et total.
+		\item Tester \texttt{/kiosk} : QR code visible + plein écran.
+	\end{enumerate}
+	
+	\section{Sécurité de base}
+	\begin{itemize}
+		\item Validation serveur systématique sur les routes d’écriture.
+		\item Erreurs sûres (pas d’informations sensibles affichées).
+		\item Persistance via ORM (Prisma) et schéma contrôlé.
+	\end{itemize}
+	
+	\chapter{Exécution et Conclusion}
+	\section{Guide d’exécution}
+	\begin{enumerate}
+		\item \texttt{npm install}
+		\item \texttt{npm run db:generate}
+		\item \texttt{npm run db:migrate}
+		\item \texttt{npm run db:seed}
+		\item \texttt{npm run dev} puis ouvrir \texttt{http://localhost:3000}
+	\end{enumerate}
+	
+	\section{Conclusion}
+	L’application \textbf{Smart Grocery Box Web App} répond aux exigences essentielles du projet : CRUD complet, UI réactive, validation robuste, gestion d’erreurs, architecture claire, et une innovation minimale via le mode Kiosk. Le périmètre reste volontairement minimal afin de respecter le cahier des charges sans ajouter de fonctionnalités optionnelles.
+	
+	\vspace{2mm}
+	\noindent\textbf{Dépôt GitHub :} \url{https://github.com/Eymeee/Web_app}
+	
+\end{document}
